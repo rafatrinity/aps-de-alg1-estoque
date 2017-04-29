@@ -1,5 +1,5 @@
  /* autor: Rafael Trindade
- * versão: 2.2.1
+ * versão: 3.0.0
  * opcional (alertas visuais e sonoros contra erros, ampliação da quantidade de produtos que podem ser cadastrados e redução de linhas)
  * O trabalho pode ser entregue em algoritmo, linguagem C ou Pascal. Deve ser enviado um arquivo com o código escrito.
  * Não é para entregar o código executável.
@@ -15,14 +15,16 @@
  * (#define C & D) = quantiade máxima de caracteres para os nomes e descrições dos produtos respectivamente.
  * esse valor pode ser alterado conforme suas nececidades.
  */
-#include "stdio.h"
-#include "stdlib.h"
-#include "locale.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <locale.h>
 #include <string.h>
+#include <unistd.h>
+#include <ctype.h>
 
 // variaveis globais
 int tot=0, cod[L], q[L], c, qt[L], tp;
-char nome[L][C], dp[L][D];
+char nome[L][C], dp[L][D], SISTEMA;
 float v[L], vt;
 
 /*
@@ -30,6 +32,46 @@ float v[L], vt;
  *As informações de cada produto são um código numérico, uma descrição, quantidade de itens e o valor unitário de cada item.
  *Deverão ser lidos 10 produtos diferentes;
  */
+char apresenta(){
+	/*
+	.::::.  ::      .::::.  ||
+	::  ::  ::      ::  ::  ||
+	::  ::  ::      ::::::  ||
+	*::::*  ::::::  ::  ::  ::
+    */
+	printf("\t.::::.  ::      .::::.  ||\n");
+	usleep(200000);
+	printf("\t::  ::  ::      ::  ::  ||\n");
+	usleep(200000);
+	printf("\t::  ::  ::      ::::::  ||\n");
+	usleep(200000);
+	printf("\t*::::*  ::::::  ::  ::  ::\n\n");
+	printf("\tPOR GENTILEZA, INFORME QUAL SISTEMA OPERACIONAL VC UTILIZA:\nD=DOS\nU=UNIX\n\n");
+	printf("\tDUVIDAS? DIGITE (i) PARA MAIS INFORMAÇÕES\n");
+	pergunta:
+	fflush(stdin);
+	scanf("%c",&SISTEMA);
+	SISTEMA=toupper(SISTEMA);
+	switch(SISTEMA){
+		case 'D':
+		system("cls");
+		fflush(stdin);
+		break;
+		case 'U':
+		system("clear");
+		getchar();
+		break;
+		case 'I':
+		printf("\nDOS = Window\nUNIX = Mac e Linux(há exeções)");
+		getchar();
+		goto pergunta;
+		break;
+		default:
+		printf("\nENTRADA INVALIDA, FAVOR DIGITAR SOMENTE AS LETRAS INDICADAS\n");
+		goto pergunta;
+	}
+	return SISTEMA;
+}
 
 void cadastro(){
 	setlocale(LC_ALL,"portuguese");
@@ -38,14 +80,24 @@ void cadastro(){
 
 	tot++;
 	printf("NOME DO PRODUTO: ");
-	fflush(stdin);
-	gets(nome[tot]);
+	if (SISTEMA=='D')
+		fflush(stdin);
+	else
+		getchar();
+	fgets(nome[tot], C, stdin);
 	printf("VALOR DO PRODUTO: ");
-	fflush(stdin);
+	if (SISTEMA=='D')
+		fflush(stdin);
+	else
+		getchar();
 	scanf("%f",&v[tot]);
 	printf("DESCRIÇÃO DO PRODUTO: ");
-	fflush(stdin);
-	gets(dp[tot]);
+	if (SISTEMA=='D')
+		fflush(stdin);
+	else
+		getchar();
+	getchar();
+	fgets(dp[tot], C, stdin);
 	cod[tot]=tot;
 
 }
@@ -156,19 +208,21 @@ void detalhes(){
 int main(){
 
 	setlocale(LC_ALL,"portuguese");
-	printf("\n====CONTROLE DE ESTOQUE=====\n\n");
-
 	// variaveis locais (main)
 
 	int menu, i;
 	char op, s;
 	float vt;
-
+	SISTEMA = apresenta();
 	menu:
 	
 	if (tot>0)
 	{
-		system("cls");
+		if (SISTEMA=='D')
+			system("cls");
+		else
+			system("clear");
+		
 		printf("\n============MENU============\n\n");
 	}
 	tp=0;
@@ -204,7 +258,11 @@ int main(){
 		else{
 			printf("\n\t\aPARA ADD PRODUTOS AO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\tDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			fflush(stdin);
+			if (SISTEMA=='D')
+				fflush(stdin);
+			else
+				getchar();
+			getchar();
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -231,7 +289,11 @@ int main(){
 
 			printf("\n\t\aPARA RETIRAR PRODUTOS DO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\t\aDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			fflush(stdin);
+			if (SISTEMA=='D')
+				fflush(stdin);
+			else
+				getchar();
+			getchar();
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -260,7 +322,11 @@ int main(){
 		{
 			printf("\n\t\aPARA VISUALIZAR OS DETALHES DOS PRODUTOS DO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\tDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			fflush(stdin);
+			if (SISTEMA=='D')
+				fflush(stdin);
+			else
+				getchar();
+			getchar();
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -283,7 +349,14 @@ int main(){
 		default:
 
 		printf("\n\t\aOPÇÃO INVALIDA!\n");
-		fflush(stdin);
+		if (SISTEMA=='D')
+			fflush(stdin);
+		else
+			getchar();
+		if (SISTEMA=='D')
+			system("pause");
+		else
+			getchar();
 		goto erro;
 		break;
 	}
@@ -304,7 +377,10 @@ int main(){
 		else if (tot==1)
 		{
 			printf("\nVC CADASTROU SEU 1° PRODUTO NO ESTOQUE\nDESEJA CADASTRAR UM NOVO PRODUTO? \nS = sim N = não ");
-			fflush(stdin);
+			if (SISTEMA=='D')
+				fflush(stdin);
+			else
+				getchar();
 			scanf("%c",&s);
 			printf("==========================================\n\n");
 		}
@@ -312,7 +388,11 @@ int main(){
 		else
 		{
 			printf("\nVC TEM %d PRODUTOS CADASTRADOS NO ESTOQUE\nDESEJA CADASTRAR UM NOVO PRODUTO? \nS = sim N = não ",tot);
-			fflush(stdin);
+			if (SISTEMA=='D')
+				fflush(stdin);
+			else
+				getchar();
+			getchar();
 			scanf("%c",&s);
 			printf("==========================================\n\n");
 		}
