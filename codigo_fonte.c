@@ -59,7 +59,7 @@ char apresenta(){
 		break;
 		case 'U':
 		system("clear");
-		getchar();
+		fflush(stdin);
 		break;
 		case 'I':
 		printf("\nDOS = Window\nUNIX = Mac e Linux(há exeções)");
@@ -204,11 +204,12 @@ void detalhes(){
 		linha();
 		printf("cod: %d nome: %s valor unitário: R$%.2f\ndescrição: %s\nunidades: %d  valor total: R$%.2f ",cod[i],nome[i],v[i],dp[i],qt[i],v[i]*qt[i]);
 		linha();
-		getchar();
-		fflush(stdin);
 	}
 }
-void linha(){
+
+//escreve uma linha na tela
+
+int linha(){
 	if(SISTEMA=='U')
 		usleep(100000);
 	printf("\n");
@@ -221,33 +222,23 @@ void linha(){
 	if(SISTEMA=='U')
 		usleep(100000);
 	printf("\n");
+	return 0;
 }
 
 // A atividade destina-se a construir um algoritmo ou programa que trate do fluxo de estoque de uma empresa:
 
-int main(){
+int menu(){
+	int menu;
+	if (SISTEMA=='D')
+		system("cls");
+	else
+		system("clear");
 
-	setlocale(LC_ALL,"portuguese");
-	// variaveis locais (main)
-
-	int menu, i;
-	char op, s;
-	float vt;
-	SISTEMA = apresenta();
-	menu:
+	printf("\n============MENU============\n\n");
 	
-	if (tot>0)
-	{
-		if (SISTEMA=='D')
-			system("cls");
-		else
-			system("clear");
-		
-		printf("\n============MENU============\n\n");
-	}
 	tp=0;
 	vt=0;
-	for (i = 1; i <= tot; ++i)
+	for (int i = 1; i <= tot; i++)
 	{
 		tp+=qt[i];
 		vt+=qt[i]*v[i];
@@ -257,12 +248,21 @@ int main(){
 	printf("(3) RETIRAR ITENS DO ESTOQUE              %d\n",tp);
 	printf("(4) INFORMAÇÕES  DO  ESTOQUE \n");
 	printf("(5) SAIR \n");
-
-	erro:
-
+	fflush(stdin);
 	scanf("%d",&menu);
+	return menu;
+}
 
-	switch(menu)
+int main(){
+
+	setlocale(LC_ALL,"portuguese");
+	// variaveis locais (main)
+	char op, s;
+	float vt;
+	SISTEMA = apresenta();
+	menu:
+	menu();
+	switch(menu())
 	{
 		case 1:
 		goto cadastro;
@@ -328,6 +328,11 @@ int main(){
 			linha();
 			printf("TOTAL DE PRODUTOS NO ESTOQUE: %d  \nVALOR TOTAL EM ESTOQUE: R$%.2f",tp,vt);
 			linha();
+			if(SISTEMA=='U')
+				getchar();
+			else
+				system("pause");
+			fflush(stdin);
 		}
 
 		else
@@ -358,11 +363,8 @@ int main(){
 
 		printf("\n\t\aOPÇÃO INVALIDA!\n");
 		fflush(stdin);
-		if (SISTEMA=='D')
-			system("pause");
-		else
-			getchar();
-		goto erro;
+		sleep(3);
+		goto menu;
 		break;
 	}
 
