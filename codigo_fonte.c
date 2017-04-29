@@ -86,17 +86,13 @@ void cadastro(){
 		getchar();
 	fgets(nome[tot], C, stdin);
 	printf("VALOR DO PRODUTO: ");
-	if (SISTEMA=='D')
-		fflush(stdin);
-	else
-		getchar();
+	fflush(stdin);
 	scanf("%f",&v[tot]);
 	printf("DESCRIÇÃO DO PRODUTO: ");
 	if (SISTEMA=='D')
 		fflush(stdin);
 	else
 		getchar();
-	getchar();
 	fgets(dp[tot], C, stdin);
 	cod[tot]=tot;
 
@@ -125,6 +121,7 @@ void ADD(){
 	{
 		qt[c]+=q[c];
 		printf("VC add %d UNIDADES DO PRODUTO %s AO ESTOQUE\nVALOR UNITÁRIO: %.2f\nVALOR TOTAL DA TRANSAÇÃO: R$%.2f \n",q[c],nome[c],v[c],v[c]*q[c]);
+		sleep(3);
 	}
 }
 
@@ -144,6 +141,12 @@ void retirar(){
 	if (q[c]>qt[c])
 	{
 		printf("\n\t\aESTOQUE INSUFICIENTE! \n");
+		sleep(1);
+		if (SISTEMA=='D')
+			system("pause");
+		else
+			getchar();
+		fflush(stdin);
 		exit;
 	}
 
@@ -157,6 +160,7 @@ void retirar(){
 	{
 		qt[c]-=q[c];
 		printf("VC RETIROU %d UNIDADES DO PRODUTO %s AO ESTOQUE\nVALOR UNITÁRIO: %.2f\nVALOR TOTAL DA TRANSAÇÃO: R$%.2f \n",q[c],nome[c],v[c],v[c]*q[c]);
+		sleep(3);
 	}
 }
 
@@ -177,9 +181,9 @@ void produtos(){
 
 	for (i = 1; i <= tot; ++i)
 	{
-		printf("\n===========================================================\n");
+		linha();
 		printf("cod: %d nome: %s valor: R$%.2f ",cod[i],nome[i],v[i]);
-		printf("\n===========================================================\n");
+		linha();
 	}
 }
 
@@ -197,10 +201,26 @@ void detalhes(){
 
 	for (i = 1; i <= tot; ++i)
 	{
-		printf("\n===========================================================\n");
+		linha();
 		printf("cod: %d nome: %s valor unitário: R$%.2f\ndescrição: %s\nunidades: %d  valor total: R$%.2f ",cod[i],nome[i],v[i],dp[i],qt[i],v[i]*qt[i]);
-		printf("\n===========================================================\n");
+		linha();
+		getchar();
+		fflush(stdin);
 	}
+}
+void linha(){
+	if(SISTEMA=='U')
+		usleep(100000);
+	printf("\n");
+	for (int i = 0; i < 60; ++i)
+	{
+		printf("=");
+		if(SISTEMA=='D')
+			usleep(20000);
+	}
+	if(SISTEMA=='U')
+		usleep(100000);
+	printf("\n");
 }
 
 // A atividade destina-se a construir um algoritmo ou programa que trate do fluxo de estoque de uma empresa:
@@ -258,11 +278,7 @@ int main(){
 		else{
 			printf("\n\t\aPARA ADD PRODUTOS AO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\tDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			if (SISTEMA=='D')
-				fflush(stdin);
-			else
-				getchar();
-			getchar();
+			fflush(stdin);
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -289,11 +305,7 @@ int main(){
 
 			printf("\n\t\aPARA RETIRAR PRODUTOS DO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\t\aDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			if (SISTEMA=='D')
-				fflush(stdin);
-			else
-				getchar();
-			getchar();
+			fflush(stdin);
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -313,20 +325,16 @@ int main(){
 		if (tot>0)
 		{
 			detalhes();
-			printf("\n===========================================================\n");
+			linha();
 			printf("TOTAL DE PRODUTOS NO ESTOQUE: %d  \nVALOR TOTAL EM ESTOQUE: R$%.2f",tp,vt);
-			printf("\n===========================================================\n\n");
+			linha();
 		}
 
 		else
 		{
 			printf("\n\t\aPARA VISUALIZAR OS DETALHES DOS PRODUTOS DO ESTOQUE VC PRECISA CADASTRA-LOS PRIMEIRO\n");
 			printf("\n\tDESEJA CADASTRAR UM NOVO PRODUTO AGORA? S=SIM N=NÃO\n");
-			if (SISTEMA=='D')
-				fflush(stdin);
-			else
-				getchar();
-			getchar();
+			fflush(stdin);
 			scanf("%c",&s);
 
 			if (s=='s'||s=='S')
@@ -349,10 +357,7 @@ int main(){
 		default:
 
 		printf("\n\t\aOPÇÃO INVALIDA!\n");
-		if (SISTEMA=='D')
-			fflush(stdin);
-		else
-			getchar();
+		fflush(stdin);
 		if (SISTEMA=='D')
 			system("pause");
 		else
@@ -370,31 +375,24 @@ int main(){
 
 		if (tot==0)
 		{
-			printf("\nVC AINDA NÃO TEM PRODUTOS CADASTRADOS NO ESTOQUE\nCADASTRE UM PRODUTO \n==========================================\n");
+			linha();
 			s='s';
 		}
 
 		else if (tot==1)
 		{
 			printf("\nVC CADASTROU SEU 1° PRODUTO NO ESTOQUE\nDESEJA CADASTRAR UM NOVO PRODUTO? \nS = sim N = não ");
-			if (SISTEMA=='D')
-				fflush(stdin);
-			else
-				getchar();
+			fflush(stdin);
 			scanf("%c",&s);
-			printf("==========================================\n\n");
+			linha();
 		}
 
 		else
 		{
 			printf("\nVC TEM %d PRODUTOS CADASTRADOS NO ESTOQUE\nDESEJA CADASTRAR UM NOVO PRODUTO? \nS = sim N = não ",tot);
-			if (SISTEMA=='D')
-				fflush(stdin);
-			else
-				getchar();
-			getchar();
+			fflush(stdin);
 			scanf("%c",&s);
-			printf("==========================================\n\n");
+			linha();
 		}
 
 		if(s=='n'||s=='N')
@@ -404,7 +402,8 @@ int main(){
 
 		else if (tot>=L)
 		{
-			printf("\n==========================================\n\n\t\aVC ATINGIU O LIMITE DE PRODUTOS QUE PODEM SER CADASTRADOS.\n");
+			linha();
+			printf("\n\t\aVC ATINGIU O LIMITE DE PRODUTOS QUE PODEM SER CADASTRADOS.\n");
 			goto menu;
 		}
 
@@ -416,7 +415,7 @@ int main(){
 		else
 		{
 			printf("\n\n\t\aDIGITE APENAS S OU N! OUTROS VALORES SERÃO IGNORADOS.");
-			printf("\t\n=====================================================\n");
+			linha();
 			goto erro1;
 		}
 	}
@@ -431,6 +430,7 @@ int main(){
 		erro3:
 
 		printf("\ncod DO PRODUTO: ");
+		fflush(stdin);
 		scanf("%d",&c);
 		printf("\n");
 
@@ -458,6 +458,7 @@ int main(){
 		erro4:
 
 		printf("\ncod DO PRODUTO: ");
+		fflush(stdin);
 		scanf("%d",&c);
 		printf("\n");
 		if (c<=tot && c>0)
