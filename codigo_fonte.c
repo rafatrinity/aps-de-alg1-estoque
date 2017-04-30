@@ -1,5 +1,5 @@
  /* autor: Rafael Trindade
- * versão: 3.0.0
+ * versão: 3.0.8
  * opcional (alertas visuais e sonoros contra erros, ampliação da quantidade de produtos que podem ser cadastrados e redução de linhas)
  * O trabalho pode ser entregue em algoritmo, linguagem C ou Pascal. Deve ser enviado um arquivo com o código escrito.
  * Não é para entregar o código executável.
