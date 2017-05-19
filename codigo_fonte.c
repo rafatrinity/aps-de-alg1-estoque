@@ -6,8 +6,8 @@
  */
 
 #define L 10
-#define C 50
-#define D 100
+#define C 30
+#define D 80
 /*
  * (#define L) = quantidade máxima de produtos que podem ser cadastrados,
  * esse valor pode ser alterado conforme suas nececidades.
@@ -21,6 +21,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <ctype.h>
+#include "sis.c"
 
 // variaveis globais
 int tot=0, cod[L], q[L], c, qt[L], tp;
@@ -32,46 +33,6 @@ float v[L], vt;
  *As informações de cada produto são um código numérico, uma descrição, quantidade de itens e o valor unitário de cada item.
  *Deverão ser lidos 10 produtos diferentes;
  */
-char apresenta(){
-	/*
-	.::::.  ::      .::::.  ||
-	::  ::  ::      ::  ::  ||
-	::  ::  ::      ::::::  ||
-	*::::*  ::::::  ::  ::  ::
-    */
-	printf("\t.::::.  ::      .::::.  ||\n");
-	usleep(200000);
-	printf("\t::  ::  ::      ::  ::  ||\n");
-	usleep(200000);
-	printf("\t::  ::  ::      ::::::  ||\n");
-	usleep(200000);
-	printf("\t*::::*  ::::::  ::  ::  ::\n\n");
-	printf("\tPOR GENTILEZA, INFORME QUAL SISTEMA OPERACIONAL VC UTILIZA:\nD=DOS\nU=UNIX\n\n");
-	printf("\tDUVIDAS? DIGITE (i) PARA MAIS INFORMAÇÕES\n");
-	pergunta:
-	fflush(stdin);
-	scanf("%c",&SISTEMA);
-	SISTEMA=toupper(SISTEMA);
-	switch(SISTEMA){
-		case 'D':
-		system("cls");
-		fflush(stdin);
-		break;
-		case 'U':
-		system("clear");
-		fflush(stdin);
-		break;
-		case 'I':
-		printf("\nDOS = Window\nUNIX = Mac e Linux(há exeções)");
-		getchar();
-		goto pergunta;
-		break;
-		default:
-		printf("\nENTRADA INVALIDA, FAVOR DIGITAR SOMENTE AS LETRAS INDICADAS\n");
-		goto pergunta;
-	}
-	return SISTEMA;
-}
 
 void cadastro(){
 	setlocale(LC_ALL,"portuguese");
@@ -93,9 +54,8 @@ void cadastro(){
 		fflush(stdin);
 	else
 		getchar();
-	fgets(dp[tot], C, stdin);
+	fgets(dp[tot], D, stdin);
 	cod[tot]=tot;
-
 }
 
 /*
@@ -107,21 +67,41 @@ void cadastro(){
 
 void ADD(){
 	setlocale(LC_ALL,"portuguese");
+	erro3:
+	printf("\ncod DO PRODUTO: ");
+	fflush(stdin);
+	scanf("%d",&c);
+	printf("\n");
 
-	printf("QUANTAS UNIDADES DO PRODUTO %s VC DESEJA add AO ESTOQUE? ",nome[c]);
-	scanf("%d",&q[c]);
 
-	if (q[c]<=0)
+	if (c<=tot && c>0)
 	{
-		printf("\nDIGITE VALORES MAIORES QUE 0! \n");
-		exit;
+		printf("QUANTAS UNIDADES DO PRODUTO %s VC DESEJA add AO ESTOQUE? ",nome[c]);
+		scanf("%d",&q[c]);
+
+		if (q[c]<=0)
+		{
+			printf("\nDIGITE VALORES MAIORES QUE 0! \n");
+			exit;
+		}
+
+		else
+		{
+			qt[c]+=q[c];
+			printf("VC add %d UNIDADES DO PRODUTO %s AO ESTOQUE\nVALOR UNITÁRIO: %.2f\nVALOR TOTAL DA TRANSAÇÃO: R$%.2f \n",q[c],nome[c],v[c],v[c]*q[c]);
+			sleep(3);
+		}
 	}
 
 	else
 	{
-		qt[c]+=q[c];
-		printf("VC add %d UNIDADES DO PRODUTO %s AO ESTOQUE\nVALOR UNITÁRIO: %.2f\nVALOR TOTAL DA TRANSAÇÃO: R$%.2f \n",q[c],nome[c],v[c],v[c]*q[c]);
-		sleep(3);
+		printf("\n\n\t\a=======CÓDIGO INVALIDO!=======\n\n");
+		sleep(2);
+		if(SISTEMA='D')
+			system("cls");
+		else
+			system("clear");
+		goto erro3;
 	}
 }
 
@@ -207,23 +187,7 @@ void detalhes(){
 	}
 }
 
-//escreve uma linha na tela
 
-int linha(){
-	if(SISTEMA=='U')
-		usleep(100000);
-	printf("\n");
-	for (int i = 0; i < 60; ++i)
-	{
-		printf("=");
-		if(SISTEMA=='D')
-			usleep(20000);
-	}
-	if(SISTEMA=='U')
-		usleep(100000);
-	printf("\n");
-	return 0;
-}
 
 // A atividade destina-se a construir um algoritmo ou programa que trate do fluxo de estoque de uma empresa:
 
@@ -261,9 +225,7 @@ int main(){
 	float vt;
 	SISTEMA = apresenta();
 	menu:
-	menu();
-	switch(menu())
-	{
+	switch(menu()){
 		case 1:
 		goto cadastro;
 		break;
@@ -272,7 +234,6 @@ int main(){
 		if(tot>0){
 			produtos();
 			op='a';
-			goto add;
 		}
 
 		else{
@@ -297,7 +258,6 @@ int main(){
 		if(tot>0){
 			produtos();
 			op='r';
-			goto add;
 		}
 
 		else
@@ -371,8 +331,7 @@ int main(){
 	cadastro:
 
 
-	do
-	{
+	do{
 		erro1:
 
 		if (tot==0)
@@ -424,38 +383,12 @@ int main(){
 
 	while(s=='s'||s=='S');
 
-	add:
-
-	if (op=='a'||op=='A')
-	{
-
-		erro3:
-
-		printf("\ncod DO PRODUTO: ");
-		fflush(stdin);
-		scanf("%d",&c);
-		printf("\n");
-
-
-		if (c<=tot && c>0)
-		{
-			ADD();
-			goto menu;
-		}
-
-		else
-		{
-			printf("\n\n\t\a=======CÓDIGO INVALIDO!=======\n\n");
-			goto erro3;
-		}
-	}
-
 	/*Retirada de tens no estoque. Nesse momento basta que seja lido o código do produto e quantos itens deseja-se retirar.
 	 *Caso a quantidade a ser retirada for maior do que atual em estoque, deve ser dada uma mensagem dizendo "Estoque Insuficiente".
 	 *Caso contrário atualizar a quantidade em estoque.
 	 */
 
-	else if (op=='r'||op=='R'){
+	if (op=='r'||op=='R'){
 
 		erro4:
 
